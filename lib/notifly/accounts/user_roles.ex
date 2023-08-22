@@ -1,4 +1,6 @@
 defmodule Notifly.Accounts.UserRoles do
+  alias Notifly.Repo
+  alias Notifly.Accounts.UserRoles
   alias Notifly.Accounts.Role
   alias Notifly.Accounts.User
   use Ecto.Schema
@@ -17,5 +19,11 @@ defmodule Notifly.Accounts.UserRoles do
     user_roles
     |> cast(attrs, [:user_id, :role_id])
     |> validate_required([:user_id, :role_id])
+  end
+
+  def create_user_role(attrs \\ %{}) do
+    %UserRoles{}
+    |> UserRoles.changeset(attrs)
+    |> Repo.insert!()
   end
 end

@@ -4,6 +4,7 @@ defmodule Notifly.Accounts do
   """
 
   import Ecto.Query, warn: false
+  alias Notifly.Accounts.UserRoles
   alias Notifly.Repo
 
   alias Notifly.Accounts.{User, UserToken, UserNotifier}
@@ -349,5 +350,9 @@ defmodule Notifly.Accounts do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
     end
+  end
+
+  def assign_default_user_role(%User{} = user) do
+      UserRoles.create_user_role(%{user_id: user.id, role_id: 1})
   end
 end

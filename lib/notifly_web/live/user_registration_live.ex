@@ -65,6 +65,8 @@ defmodule NotiflyWeb.UserRegistrationLive do
             &url(~p"/users/confirm/#{&1}")
           )
 
+        Accounts.assign_default_user_role(user)
+
         changeset = Accounts.change_user_registration(user)
         {:noreply, socket |> assign(trigger_submit: true) |> assign_form(changeset)}
 
