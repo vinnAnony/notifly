@@ -1,4 +1,5 @@
 defmodule Notifly.Accounts.User do
+  alias Notifly.Accounts.UserRoles
   use Ecto.Schema
   import Ecto.Changeset
   import EctoEnum
@@ -17,6 +18,10 @@ defmodule Notifly.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+
+    has_many :user_roles, UserRoles
+    has_many :roles,
+    through: [:user_roles, :role]
 
     timestamps()
   end
