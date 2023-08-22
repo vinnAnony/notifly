@@ -19,7 +19,7 @@ defmodule Notifly.MixProject do
   def application do
     [
       mod: {Notifly.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :ecto_enum]
     ]
   end
 
@@ -32,8 +32,10 @@ defmodule Notifly.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:bcrypt_elixir, "~> 3.0"},
       {:phoenix, "~> 1.7.6"},
       {:phoenix_ecto, "~> 4.4"},
+      {:ecto_enum, "~> 1.4"},
       {:ecto_sql, "~> 3.10"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.3"},
