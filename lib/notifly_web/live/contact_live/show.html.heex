@@ -1,6 +1,5 @@
 <.header>
-  Contact <%= @contact.id %>
-  <:subtitle>This is a contact record from your database.</:subtitle>
+  <%= @contact.name %>
   <:actions>
     <.link patch={~p"/contacts/#{@contact}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit contact</.button>
