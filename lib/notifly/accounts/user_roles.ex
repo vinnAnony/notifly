@@ -26,4 +26,8 @@ defmodule Notifly.Accounts.UserRoles do
     |> UserRoles.changeset(attrs)
     |> Repo.insert!()
   end
+
+  def delete_user_role(%UserRoles{} = user_role) do
+    Repo.delete(user_role)
+  end
 end

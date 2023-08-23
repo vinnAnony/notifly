@@ -4,6 +4,7 @@ defmodule Notifly.Accounts do
   """
 
   import Ecto.Query, warn: false
+  alias Notifly.Accounts.Role
   alias Notifly.Accounts.UserRoles
   alias Notifly.Repo
 
@@ -354,5 +355,56 @@ defmodule Notifly.Accounts do
 
   def assign_default_user_role(%User{} = user) do
       UserRoles.create_user_role(%{user_id: user.id, role_id: 1})
+  end
+
+  defp get_role_by_name(role_name) do
+    Repo.get_by(Role, slug: role_name)
+  end
+
+  defp grant_user_role(user_id, role_id) do
+    user_role = Repo.get_by(UserRoles, role_id: role_id, user_id: user_id);
+    if user_role == nil do
+      UserRoles.create_user_role(%{role_id: role_id, user_id: user_id})
+    else
+      {:noreply, "User role already exists"}
+    end
+  end
+
+  defp revoke_user_role(user_id, role_id) do
+    user_role = Repo.get_by(UserRoles, role_id: role_id, user_id: user_id);
+    if user_role != nil do
+      UserRoles.delete_user_role(user_role)
+    else
+      {:noreply, "User role does not exist"}
+    end
+  end
+
+  # Alter admin/superuser role
+  @doc """
+  Grant user role
+  """
+  def grant_role_to_user(user, role_name) do
+    with %Role{} = role <- get_role_by_name(role_name)do
+      grant_user_role(user.id, role.id)
+    else
+      {:error, _} ->
+        "An error occurred"
+    end
+  end
+
+  @doc """
+  Revoke user role
+  """
+  def revoke_role_to_user(user, role_name) do
+    if role_name != "default" do
+      with %Role{} = role <- get_role_by_name(role_name)do
+        revoke_user_role(user.id, role.id)
+      else
+        {:error, _} ->
+          "An error occurred"
+      end
+    else
+      {:error, "Cannot revoke default role"}
+    end
   end
 end
