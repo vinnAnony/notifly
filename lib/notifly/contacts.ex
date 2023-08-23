@@ -17,8 +17,10 @@ defmodule Notifly.Contacts do
       [%Contact{}, ...]
 
   """
-  def list_contacts do
-    Repo.all(Contact)
+  def list_contacts(user) do
+    Contact
+    |> where([m], m.owner_id == ^user.id)
+    |> Repo.all
   end
 
   @doc """
