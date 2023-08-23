@@ -1,0 +1,19 @@
+<div>
+    <.header>
+    <%= @title %>
+    </.header>
+
+    <.simple_form
+    for={@form}
+    id="contact-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save"
+    >
+    <.input field={@form[:name]} type="text" label="Name" />
+    <.input field={@form[:email]} type="text" label="Email" />
+    <:actions>
+        <.button phx-disable-with="Saving...">Save Contact</.button>
+    </:actions>
+    </.simple_form>
+</div>

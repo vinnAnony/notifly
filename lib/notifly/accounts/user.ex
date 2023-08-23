@@ -1,4 +1,5 @@
 defmodule Notifly.Accounts.User do
+  alias Notifly.Contacts.Contact
   alias Notifly.Repo
   alias Notifly.Accounts.UserRoles
   use Ecto.Schema
@@ -23,6 +24,7 @@ defmodule Notifly.Accounts.User do
     has_many :user_roles, UserRoles
     has_many :roles,
     through: [:user_roles, :role]
+    has_many :contacts, Contact
 
     timestamps()
   end
