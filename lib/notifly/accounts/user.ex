@@ -1,4 +1,5 @@
 defmodule Notifly.Accounts.User do
+  alias Notifly.Repo
   alias Notifly.Accounts.UserRoles
   use Ecto.Schema
   import Ecto.Changeset
@@ -14,7 +15,7 @@ defmodule Notifly.Accounts.User do
     field :last_name, :string
     field :email, :string
     field :msisdn, :string
-    field :plan, PlansEnum, default: :basic
+    field :plan, Ecto.Enum, values: [:basic, :gold], default: :basic
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
@@ -162,6 +163,26 @@ defmodule Notifly.Accounts.User do
       changeset
     else
       add_error(changeset, :current_password, "is not valid")
+    end
+  end
+
+  @doc """
+  Upgrades current user plan
+  """
+  def upgrade_user_plan(user) do
+    changeset = cast(user, %{plan: "gold"}, [:plan])
+    if changeset.valid? do
+      Repo.update!(changeset)
+    end
+  end
+
+  @doc """
+  Downgrades current user plan
+  """
+  def downgrade_user_plan(user) do
+    changeset = cast(user, %{plan: "basic"}, [:plan])
+    if changeset.valid? do
+      Repo.update!(changeset)
     end
   end
 end
