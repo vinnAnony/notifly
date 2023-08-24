@@ -25,8 +25,8 @@ defmodule Notifly.Accounts.User do
     has_many :user_roles, UserRoles
     has_many :roles,
     through: [:user_roles, :role]
-    has_many :contacts, Contact
-    has_many :groups, Group
+    has_many :contacts, Contact, foreign_key: :owner_id
+    has_many :groups, Group, foreign_key: :owner_id
 
     timestamps()
   end
