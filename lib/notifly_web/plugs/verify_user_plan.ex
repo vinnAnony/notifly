@@ -11,7 +11,7 @@ defmodule NotiflyWeb.Plugs.VerifyUserPlan do
   """
   def require_gold_plan(conn, _opts) do
     user_plan = conn.assigns.current_user.plan
-    Logger.info(user_plan)
+
     if user_plan == :gold do
       conn
     else

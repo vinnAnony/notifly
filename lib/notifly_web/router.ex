@@ -1,4 +1,5 @@
 defmodule NotiflyWeb.Router do
+  alias NotiflyWeb.VerifyUserRole
   use NotiflyWeb, :router
 
   import NotiflyWeb.UserAuth
@@ -12,6 +13,16 @@ defmodule NotiflyWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+  end
+
+  pipeline :default do
+    plug VerifyUserRole, ["default","admin","superuser"]
+  end
+  pipeline :admin do
+    plug VerifyUserRole, ["admin","superuser"]
+  end
+  pipeline :superuser do
+    plug VerifyUserRole, ["superuser"]
   end
 
   pipeline :api do
@@ -63,7 +74,7 @@ defmodule NotiflyWeb.Router do
   end
 
   scope "/", NotiflyWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through [:browser, :require_authenticated_user, :default]
 
     live_session :require_authenticated_user,
       root_layout: {NotiflyWeb.Layouts, :auth_root},
