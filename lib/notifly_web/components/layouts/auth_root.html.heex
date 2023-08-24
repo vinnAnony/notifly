@@ -16,8 +16,8 @@
 
     <nav class="fixed top-0 z-50 w-full bg-white border-gray-200 dark:bg-gray-900">
       
-      <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">        
-          <a href={~p"/"} class="flex items-center">
+      <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-5 p-4">        
+          <a href={~p"/mailbox"} class="flex items-center">
               <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Notifly</span>
           </a>
         <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
@@ -33,7 +33,7 @@
       <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
           <ul class="space-y-2 font-medium">
             <%= if @current_user do %>
-            <li class="text-[0.8125rem] leading-6 text-zinc-900 dark:text-white">
+            <li class="text-[0.8125rem] leading-6 text-zinc-900 dark:text-white ml-4">
               <%= @current_user.email %>
             </li>
             <% end %>
