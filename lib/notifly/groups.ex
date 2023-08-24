@@ -17,8 +17,10 @@ defmodule Notifly.Groups do
       [%Group{}, ...]
 
   """
-  def list_groups do
-    Repo.all(Group)
+  def list_groups(user) do
+    Group
+    |> where([group], group.owner_id == ^user.id)
+    |> Repo.all
   end
 
   @doc """

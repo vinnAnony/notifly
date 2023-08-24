@@ -6,7 +6,7 @@ defmodule NotiflyWeb.GroupLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :groups, Groups.list_groups())}
+    {:ok, stream(socket, :groups, Groups.list_groups(socket.assigns.current_user))}
   end
 
   @impl true
