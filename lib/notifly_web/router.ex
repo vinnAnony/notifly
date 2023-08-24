@@ -100,6 +100,10 @@ defmodule NotiflyWeb.Router do
 
       live "/groups/:id", GroupLive.Show, :show
       live "/groups/:id/show/edit", GroupLive.Show, :edit
+
+      # TODO: Group contacts
+
+      # TODO: Group emails
     end
   end
 
