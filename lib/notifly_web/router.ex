@@ -71,6 +71,8 @@ defmodule NotiflyWeb.Router do
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
       # Notifly app routes
+
+      # Contacts
       live "/contacts", ContactLive.Index, :index
       live "/contacts/new", ContactLive.Index, :new
       live "/contacts/:id/edit", ContactLive.Index, :edit
@@ -78,7 +80,16 @@ defmodule NotiflyWeb.Router do
       live "/contacts/:id", ContactLive.Show, :show
       live "/contacts/:id/show/edit", ContactLive.Show, :edit
 
+      # Mailbox
       live "/mailbox", MailBoxLive
+
+      # Groups
+      live "/groups", GroupLive.Index, :index
+      live "/groups/new", GroupLive.Index, :new
+      live "/groups/:id/edit", GroupLive.Index, :edit
+
+      live "/groups/:id", GroupLive.Show, :show
+      live "/groups/:id/show/edit", GroupLive.Show, :edit
     end
   end
 

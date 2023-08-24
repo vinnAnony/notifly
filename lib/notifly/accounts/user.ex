@@ -1,4 +1,5 @@
 defmodule Notifly.Accounts.User do
+  alias Notifly.Groups.Group
   alias Notifly.Contacts.Contact
   alias Notifly.Repo
   alias Notifly.Accounts.UserRoles
@@ -25,6 +26,7 @@ defmodule Notifly.Accounts.User do
     has_many :roles,
     through: [:user_roles, :role]
     has_many :contacts, Contact
+    has_many :groups, Group
 
     timestamps()
   end
