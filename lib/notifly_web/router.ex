@@ -65,6 +65,7 @@ defmodule NotiflyWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
+      root_layout: {NotiflyWeb.Layouts, :auth_root},
       on_mount: [{NotiflyWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
