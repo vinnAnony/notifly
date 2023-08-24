@@ -2,6 +2,7 @@ defmodule NotiflyWeb.Router do
   use NotiflyWeb, :router
 
   import NotiflyWeb.UserAuth
+  import NotiflyWeb.Plugs.VerifyUserPlan
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -82,6 +83,15 @@ defmodule NotiflyWeb.Router do
 
       # Mailbox
       live "/mailbox", MailBoxLive
+    end
+  end
+
+  scope "/", NotiflyWeb do
+    pipe_through [:browser, :require_authenticated_user, :require_gold_plan,]
+
+    live_session :require_gold_plan,
+      root_layout: {NotiflyWeb.Layouts, :auth_root},
+      on_mount: [{NotiflyWeb.UserAuth, :ensure_authenticated}] do
 
       # Groups
       live "/groups", GroupLive.Index, :index
