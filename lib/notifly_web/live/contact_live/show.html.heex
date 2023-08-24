@@ -1,26 +1,30 @@
-<.header>
-  <%= @contact.name %>
-  <:actions>
-    <.link patch={~p"/contacts/#{@contact}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit contact</.button>
-    </.link>
-  </:actions>
-</.header>
+<div class="px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl">
+      <.header>
+        <%= @contact.name %>
+        <:actions>
+          <.link patch={~p"/contacts/#{@contact}/show/edit"} phx-click={JS.push_focus()}>
+            <.button>Edit contact</.button>
+          </.link>
+        </:actions>
+      </.header>
 
-<.list>
-  <:item title="Name"><%= @contact.name %></:item>
-  <:item title="Email"><%= @contact.email %></:item>
-</.list>
+      <.list>
+        <:item title="Name"><%= @contact.name %></:item>
+        <:item title="Email"><%= @contact.email %></:item>
+      </.list>
 
-<.back navigate={~p"/contacts"}>Back to contacts</.back>
+      <.back navigate={~p"/contacts"}>Back to contacts</.back>
 
-<.modal :if={@live_action == :edit} id="contact-modal" show on_cancel={JS.patch(~p"/contacts/#{@contact}")}>
-  <.live_component
-    module={NotiflyWeb.ContactLive.FormComponent}
-    id={@contact.id}
-    title={@page_title}
-    action={@live_action}
-    contact={@contact}
-    patch={~p"/contacts/#{@contact}"}
-  />
-</.modal>
+      <.modal :if={@live_action == :edit} id="contact-modal" show on_cancel={JS.patch(~p"/contacts/#{@contact}")}>
+        <.live_component
+          module={NotiflyWeb.ContactLive.FormComponent}
+          id={@contact.id}
+          title={@page_title}
+          action={@live_action}
+          contact={@contact}
+          patch={~p"/contacts/#{@contact}"}
+        />
+      </.modal>
+  </div>
+</div>
