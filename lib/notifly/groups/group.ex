@@ -1,4 +1,5 @@
 defmodule Notifly.Groups.Group do
+  alias Notifly.Groups.GroupContact
   alias Notifly.Accounts.User
   use Ecto.Schema
   import Ecto.Changeset
@@ -7,6 +8,9 @@ defmodule Notifly.Groups.Group do
     field :name, :string
 
     belongs_to :owner, User
+    has_many :group_contacts, GroupContact
+    has_many :contacts,
+    through: [:group_contacts, :contact]
 
     timestamps()
   end
