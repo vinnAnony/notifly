@@ -126,8 +126,7 @@ defmodule NotiflyWeb.Router do
 
       # Users
       live "/users/", UserLive.Index, :index
-      live "/users/:id", UserLive.Index, :index
-      live "/users/:id/mails", UserLive.Index, :index
+      live "/users/:id/mails", UserLive.ShowUserMails
     end
   end
 

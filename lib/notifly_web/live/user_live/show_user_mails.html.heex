@@ -1,0 +1,20 @@
+<div class="px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl">
+      <.header>
+        <%= @selected_user.first_name %> <%= @selected_user.last_name %> Emails
+      </.header>
+
+      <%!-- TODO: fetch and display emails belonging to user --%>
+      <%!-- <.table
+        id="user-emails"
+        rows={@streams.mails}
+        row_click={fn {_id, mail} -> JS.navigate(~p"/mails/#{mail}") end}
+      >
+        <:col :let={{_id, mail}} label=""><%= mail.subject %></:col>
+        <:col :let={{_id, mail}} label=""><%= mail.inserted_at %></:col>
+        <:action :let={{_id, mail}}>
+          <.link navigate={~p"/mails/#{mail}"}>View</.link>
+        </:action>
+      </.table> --%>
+  </div>
+</div>
