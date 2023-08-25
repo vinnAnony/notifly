@@ -1,6 +1,7 @@
 defmodule NotiflyWeb.UserLive.Index do
-  alias Notifly.Accounts
   use NotiflyWeb, :live_view
+
+  alias Notifly.Accounts
 
   @impl true
   def mount(_params, _session, socket) do
@@ -20,9 +21,17 @@ defmodule NotiflyWeb.UserLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    user = Accounts.get_user!(id)
-    {:ok, _} = Accounts.delete_user(user)
+    if id == socket.assigns.current_user.id do
+      {:noreply,
+         socket
+         |> put_flash(:error, "Cannot delete your own account.")
+         |> redirect(to: ~p"/users")}
+    else
+      user = Accounts.get_user!(id)
+      {:ok, _} = Accounts.delete_user(user)
 
-    {:noreply, stream_delete(socket, :users, user)}
+      {:noreply, stream_delete(socket, :users, user)}
+    end
+
   end
 end
