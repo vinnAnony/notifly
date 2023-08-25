@@ -98,7 +98,7 @@ defmodule NotiflyWeb.Router do
   end
 
   scope "/", NotiflyWeb do
-    pipe_through [:browser, :require_authenticated_user, :require_gold_plan,]
+    pipe_through [:browser, :require_authenticated_user, :require_gold_plan, :default,]
 
     live_session :require_gold_plan,
       root_layout: {NotiflyWeb.Layouts, :auth_root},
