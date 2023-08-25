@@ -82,8 +82,7 @@ defmodule NotiflyWeb.Router do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
-      # Notifly app routes
-
+      # --------------- Notifly app routes --------------------
       # Contacts
       live "/contacts", ContactLive.Index, :index
       live "/contacts/new", ContactLive.Index, :new
@@ -115,6 +114,20 @@ defmodule NotiflyWeb.Router do
       # TODO: Group contacts
 
       # TODO: Group emails
+    end
+  end
+
+  scope "/", NotiflyWeb do
+    pipe_through [:browser, :require_authenticated_user, :admin,]
+
+    live_session :admin,
+      root_layout: {NotiflyWeb.Layouts, :auth_root},
+      on_mount: [{NotiflyWeb.UserAuth, :ensure_authenticated}] do
+
+      # Users
+      live "/users/", UserLive.Index, :index
+      live "/users/:id", UserLive.Index, :index
+      live "/users/:id/mails", UserLive.Index, :index
     end
   end
 

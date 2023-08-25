@@ -1,0 +1,29 @@
+<div class="px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl">
+      <.header>
+        Users
+      </.header>
+
+      <.table
+        id="users"
+        rows={@streams.users}
+        row_click={fn {_id, user} -> JS.navigate(~p"/users/#{user}") end}
+      >
+        <:col :let={{_id, user}} label="Name"><%= "#{user.first_name} #{user.last_name}" %></:col>
+        <:col :let={{_id, user}} label="Email"><%= user.email %></:col>
+        <:action :let={{_id, user}}>
+          <div class="sr-only">
+            <.link navigate={~p"/users/#{user}/mails"}>View Emails</.link>
+          </div>
+        </:action>
+        <:action :let={{id, user}}>
+          <.link
+            phx-click={JS.push("delete", value: %{id: user.id}) |> hide("##{id}")}
+            data-confirm="Are you sure?"
+          >
+            Delete
+          </.link>
+        </:action>
+      </.table>
+  </div>
+</div>

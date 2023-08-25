@@ -19,6 +19,7 @@ defmodule Notifly.Accounts.UserRoles do
     user_roles
     |> cast(attrs, [:user_id, :role_id])
     |> validate_required([:user_id, :role_id])
+    |> foreign_key_constraint(:user_id)
   end
 
   def create_user_role(attrs \\ %{}) do

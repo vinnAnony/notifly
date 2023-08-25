@@ -353,6 +353,55 @@ defmodule Notifly.Accounts do
     end
   end
 
+  @doc """
+  Delete a user and all their data
+  """
+  def list_users do
+    Repo.all(User)
+  end
+
+  @doc """
+  Delete a user and all their data
+  """
+  def delete_user(%User{} = user) do
+    Repo.transaction(fn ->
+      user = Repo.get(User, user.id)
+        |> Repo.preload(:contacts)
+        |> Repo.preload(:groups)
+
+      if user do
+        # Delete user's contacts, groups etc.
+        delete_related_data(user)
+
+        # Delete the user
+        Repo.delete(user)
+      else
+        IO.puts("User not found.")
+      end
+    end)
+  end
+
+  defp delete_related_data(user) do
+    # Delete user roles
+    from(ur in UserRoles, where: ur.user_id == ^user.id) |> Repo.delete_all()
+
+    # Delete user contacts
+    Enum.each(user.contacts, fn contact ->
+      Repo.delete(contact)
+    end)
+
+    # Delete user groups
+    Enum.each(user.groups, fn group ->
+      Repo.delete(group)
+    end)
+
+    # TODO: Delete user emails
+
+  end
+
+  @doc """
+  This assigns the 'default' user role when a user is registered.
+  """
   def assign_default_user_role(%User{} = user) do
       UserRoles.create_user_role(%{user_id: user.id, role_id: 1})
   end
