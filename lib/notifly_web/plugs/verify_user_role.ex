@@ -30,10 +30,7 @@ def init(config), do: config
   end
 
   defp has_role?(curr_user_roles, roles) when is_list(roles) do
-    sts = Enum.any?(curr_user_roles, fn role -> role in roles end)
-    IO.inspect(curr_user_roles)
-    IO.inspect(roles)
-    IO.inspect(sts)
+    Enum.any?(curr_user_roles, fn role -> role in roles end)
   end
 
   defp has_role?(_user, _role), do: false
