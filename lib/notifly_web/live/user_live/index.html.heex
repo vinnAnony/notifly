@@ -1,5 +1,5 @@
 <div class="px-4 py-8 sm:px-6 lg:px-8">
-    <div class="mx-auto max-w-2xl">
+    <div class="mx-8">
       <.header>
         Users
       </.header>
@@ -7,12 +7,33 @@
       <.table
         id="users"
         rows={@streams.users}
-        row_click={fn {_id, user} -> JS.navigate(~p"/users/#{user}/mails") end}
+        row_click={fn {_id, user} -> JS.navigate(~p"/users/#{user}") end}
       >
         <:col :let={{_id, user}} label="Name"><%= "#{user.first_name} #{user.last_name}" %></:col>
         <:col :let={{_id, user}} label="Email"><%= user.email %></:col>
+        <:col :let={{_id, user}} label="Plan"><%= user.plan %></:col>
         <:action :let={{_id, user}}>
-          <.link navigate={~p"/users/#{user}/mails"}>View Emails</.link>
+          <.link navigate={~p"/users/#{user}"}>View</.link>
+        </:action>
+        <:action :let={{_id, user}}>
+          <.link navigate={~p"/users/#{user}/roles"}>Edit Role</.link>
+        </:action>
+        <:action :let={{id, user}}>
+        <%= if user.plan == :basic do %>
+        <.link
+            phx-click={JS.push("upgrade", value: %{id: user.id}) |> hide("##{id}")}
+            data-confirm="Are you sure you want to upgrade user?"
+          >
+            Upgrade
+          </.link>
+        <% else %>
+        <.link
+            phx-click={JS.push("downgrade", value: %{id: user.id}) |> hide("##{id}")}
+            data-confirm="Are you sure you want to downgrade user?"
+          >
+            Downgrade
+          </.link>
+        <% end %>
         </:action>
         <:action :let={{id, user}}>
           <.link

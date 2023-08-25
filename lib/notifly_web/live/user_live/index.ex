@@ -32,6 +32,21 @@ defmodule NotiflyWeb.UserLive.Index do
 
       {:noreply, stream_delete(socket, :users, user)}
     end
+  end
 
+  @impl true
+  def handle_event("upgrade", %{"id" => id}, socket) do
+    user = Accounts.get_user!(id)
+
+    {:ok, _} = Accounts.User.upgrade_user_plan(user)
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("downgrade", %{"id" => id}, socket) do
+    user = Accounts.get_user!(id)
+
+    {:ok, _} = Accounts.User.downgrade_user_plan(user)
+    {:noreply, socket}
   end
 end

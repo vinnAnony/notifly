@@ -126,7 +126,19 @@ defmodule NotiflyWeb.Router do
 
       # Users
       live "/users/", UserLive.Index, :index
-      live "/users/:id/mails", UserLive.ShowUserMails
+      live "/users/:id", UserLive.Show
+    end
+  end
+
+  scope "/", NotiflyWeb do
+    pipe_through [:browser, :require_authenticated_user, :superuser,]
+
+    live_session :superuser,
+      root_layout: {NotiflyWeb.Layouts, :auth_root},
+      on_mount: [{NotiflyWeb.UserAuth, :ensure_authenticated}] do
+
+      # User roles
+      live "/users/:id/roles", UserLive.Show
     end
   end
 
