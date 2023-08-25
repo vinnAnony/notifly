@@ -1,4 +1,4 @@
-defmodule NotiflyWeb.UserLive.ShowUserMails do
+defmodule NotiflyWeb.UserLive.Show do
   alias Notifly.Accounts
   use NotiflyWeb, :live_view
 
