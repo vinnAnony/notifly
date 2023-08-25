@@ -12,9 +12,7 @@
         <:col :let={{_id, user}} label="Name"><%= "#{user.first_name} #{user.last_name}" %></:col>
         <:col :let={{_id, user}} label="Email"><%= user.email %></:col>
         <:action :let={{_id, user}}>
-          <div class="sr-only">
-            <.link navigate={~p"/users/#{user}/mails"}>View Emails</.link>
-          </div>
+          <.link navigate={~p"/users/#{user}/mails"}>View Emails</.link>
         </:action>
         <:action :let={{id, user}}>
           <.link
