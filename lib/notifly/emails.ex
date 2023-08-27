@@ -4,6 +4,10 @@ defmodule Notifly.Emails do
   """
 
   import Ecto.Query, warn: false
+  require Logger
+  alias Notifly.Accounts.User
+  alias Notifly.Contacts.Contact
+  alias Notifly.Emails.EmailNotifier
   alias Notifly.Repo
 
   alias Notifly.Emails.Email
@@ -105,5 +109,33 @@ defmodule Notifly.Emails do
   """
   def change_email(%Email{} = email, attrs \\ %{}) do
     Email.changeset(email, attrs)
+  end
+
+  @doc """
+  Sends a single email
+
+  """
+  @spec send_single_email(%Contact{}, %User{}, String, String):: :ok
+  def send_single_email(contact, sender, subject, body) do
+    type = :single
+
+    {:ok, email_entry} = create_email(%{body: body,subject: subject,type: type,sender_id: sender.id,contact_id: contact.id})
+
+    email_delivery = EmailNotifier.deliver(contact, sender, subject, body)
+      with {:ok, _metadata} <- email_delivery do
+        update_email(email_entry, %{status: :sent})
+        {:ok, "Sent successfully."}
+      else
+        {:error, reason} -> IO.puts("Failed to send email. Reason: #{reason}")
+        _ -> :error
+      end
+  end
+
+  @doc """
+  Sends bulk/group email
+
+  """
+  def send_bulk_email() do
+
   end
 end

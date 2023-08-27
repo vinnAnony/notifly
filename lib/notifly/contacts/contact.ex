@@ -9,7 +9,7 @@ defmodule Notifly.Contacts.Contact do
     field :name, :string
 
     belongs_to :owner, User
-    belongs_to :emails, Email
+    has_many :emails, Email
 
     timestamps()
   end
