@@ -1,4 +1,5 @@
 defmodule Notifly.Groups.Group do
+  alias Notifly.Emails.GroupEmails
   alias Notifly.Groups.GroupContact
   alias Notifly.Accounts.User
   use Ecto.Schema
@@ -11,6 +12,9 @@ defmodule Notifly.Groups.Group do
     has_many :group_contacts, GroupContact
     has_many :contacts,
     through: [:group_contacts, :contact]
+    has_many :group_emails, GroupEmails
+    has_many :emails,
+    through: [:group_emails, :email]
 
     timestamps()
   end

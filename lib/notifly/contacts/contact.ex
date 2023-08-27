@@ -1,4 +1,5 @@
 defmodule Notifly.Contacts.Contact do
+  alias Notifly.Emails.Email
   alias Notifly.Accounts.User
   use Ecto.Schema
   import Ecto.Changeset
@@ -8,6 +9,7 @@ defmodule Notifly.Contacts.Contact do
     field :name, :string
 
     belongs_to :owner, User
+    belongs_to :emails, Email
 
     timestamps()
   end
