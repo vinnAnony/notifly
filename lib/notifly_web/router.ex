@@ -92,7 +92,8 @@ defmodule NotiflyWeb.Router do
       live "/contacts/:id/show/edit", ContactLive.Show, :edit
 
       # Mailbox
-      live "/mailbox", MailBoxLive
+      live "/mailbox", MailLive.Index
+      live "/mailbox/:id", MailLive.Show
     end
   end
 
