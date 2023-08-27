@@ -1,0 +1,38 @@
+<div>
+    <.header>
+        User Roles
+        <:actions>
+        <%= if !has_role?(@streams,["admin"]) do %>
+            <.link
+            phx-click={JS.push("grant_role", value: %{role_slug: "admin"})}
+            data-confirm="Are you sure you want to grant admin role?"
+            >
+            <.button>Grant Admin Role</.button>
+            </.link>
+        <% end %>
+        <%= if !has_role?(@streams,["superuser"]) do %>
+            <.link
+            phx-click={JS.push("grant_role", value: %{role_slug: "superuser"})}
+            data-confirm="Are you sure you want to grant superuser role?"
+            >
+            <.button>Grant Superuser Role</.button>
+            </.link>
+        <% end %>
+        </:actions>
+    </.header>
+
+    <.table
+    id="user-roles"
+    rows={@streams.user_roles}
+    >
+    <:col :let={{_id, user_role}} label="Role"><%= user_role.name %></:col>
+    <:action :let={{id, user_role}}>
+        <.link
+        phx-click={JS.push("revoke_role", value: %{role_slug: user_role.slug}) |> hide("##{id}")}
+        data-confirm="Are you sure you want to revoke the role?"
+        >
+        Revoke
+        </.link>
+    </:action>
+    </.table>
+</div>

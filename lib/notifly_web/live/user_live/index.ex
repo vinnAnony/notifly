@@ -1,4 +1,6 @@
 defmodule NotiflyWeb.UserLive.Index do
+  alias Notifly.Accounts.User
+  alias Notifly.Repo
   use NotiflyWeb, :live_view
 
   alias Notifly.Accounts
@@ -17,6 +19,14 @@ defmodule NotiflyWeb.UserLive.Index do
     socket
     |> assign(:page_title, "Users")
     |> assign(:user, nil)
+  end
+
+  defp apply_action(socket, :edit_role, %{"id" => id}) do
+    user = Repo.get!(User, id)
+
+    socket
+    |> assign(:page_title, "Edit Role")
+    |> assign(:user, user)
   end
 
   @impl true
@@ -48,5 +58,21 @@ defmodule NotiflyWeb.UserLive.Index do
 
     {:ok, _} = Accounts.User.downgrade_user_plan(user)
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("grant_role", %{"role_slug" => role_slug}, socket) do
+    user = Accounts.get_user!(socket.assigns.user.id)
+
+    {:ok, _} = Accounts.grant_role_to_user(user, role_slug)
+    {:noreply, socket}
+  end
+
+  def handle_event("revoke_role", %{"role_slug" => role_slug}, socket) do
+    user = Accounts.get_user!(socket.assigns.user.id)
+
+    {:ok, _} = Accounts.revoke_role_to_user(user, role_slug)
+    updated_user = Repo.get(User, socket.assigns.user.id) |> Repo.preload(:roles)
+    {:noreply, stream_delete(socket, :user, updated_user)}
   end
 end

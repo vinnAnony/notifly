@@ -138,7 +138,7 @@ defmodule NotiflyWeb.Router do
       on_mount: [{NotiflyWeb.UserAuth, :ensure_authenticated}] do
 
       # User roles
-      live "/users/:id/roles", UserLive.Show
+      live "/users/:id/roles", UserLive.Index, :edit_role
     end
   end
 
