@@ -18,5 +18,5 @@ defmodule NotiflyWeb.UserLive.Show do
      |> assign(:selected_user, selected_user)}
   end
 
-  defp page_title(selected_user_name), do: "#{selected_user_name} Emails"
+  defp page_title(selected_user_name), do: "#{selected_user_name}"
 end

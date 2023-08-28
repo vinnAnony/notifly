@@ -46,7 +46,11 @@ defmodule Notifly.Emails do
       ** (Ecto.NoResultsError)
 
   """
-  def get_email!(id), do: Repo.get!(Email, id)
+  def get_email!(id) do
+    Repo.get!(Email, id)
+    |> Repo.preload(:sender)
+    |> Repo.preload(:contact)
+  end
 
   @doc """
   Creates a email.

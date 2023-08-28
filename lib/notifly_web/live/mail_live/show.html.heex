@@ -2,37 +2,34 @@
   <div class="flex flex-col md:flex-row justify-center shadow-lg rounded-3xl w-full bg-white">
     <section class="md:w-8/12 p-4 flex flex-col rounded-r-3xl bg-white">
       <div class="flex justify-between items-center h-32 border-b-2 mb-8">
-        <div class="flex space-x-4 items-center">
-          <div class="h-12 w-12 rounded-full overflow-hidden">
-            <img src="https://bit.ly/2KfKgdy" loading="lazy" class="h-full w-full object-cover" alt="Profile Image" />
+        <div class="flex flex-col">
+          <div class="flex flex-row gap-3">
+            <p>From: </p>
+            <h3 class="font-semibold text-lg"><%= "#{@selected_email.sender.first_name} #{@selected_email.sender.last_name}" %> </h3> 
+            <p class="text-light text-gray-400"><%= "<#{@selected_email.sender.email}>" %></p>
           </div>
-          <div class="flex flex-col">
-            <h3 class="font-semibold text-lg">Vinn Njeru</h3>
-            <p class="text-light text-gray-400">vinn.njeru@mail.com</p>
+          <div class="flex flex-row gap-3">
+            <p>To: </p>
+            <h3 class="font-semibold text-lg"><%= @selected_email.contact.name %> </h3> 
+            <p class="text-light text-gray-400"><%= "<#{@selected_email.contact.email}>" %></p>
           </div>
         </div>
         <div>
           <ul class="flex text-gray-400 space-x-4">
             <li class="w-6 h-6 cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
+            <.link
+              phx-click={JS.push("delete", value: %{id: @selected_email.id})}
+              data-confirm="Are you sure you want to delete this email?">
+              <.icon name="hero-trash"  class="flex-shrink-0 w-7 h-7 text-gray-700 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white" />        
+            </.link>
             </li>
           </ul>
         </div>
       </div>
       <section>
-        <h1 class="font-bold text-2xl">We need UI/UX designer</h1>
+        <h1 class="font-bold text-2xl"><%= @selected_email.subject %></h1>
         <article class="mt-8 text-gray-500 leading-7 tracking-wider">
-          <p>Hi Vinn,</p>
-          <p>Design and develop email notification system using Phoenix Framework and LiveView. Work with
-            Product Managers and User Experience designers to create an appealing user experience for desktop web and
-            mobile web.</p>
-          <footer class="mt-12">
-            <p>Thanks & Regards,</p>
-            <p>Kokoriko</p>
-          </footer>
+          <p><%= @selected_email.body %></p>
         </article>
       </section>
     </section>
