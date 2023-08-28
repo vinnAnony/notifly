@@ -1,0 +1,47 @@
+<div class="flex justify-center items-center">
+  <div class="md:w-4/6 w-full bg-white p-6 rounded-lg shadow-md">
+    <h1 class="text-xl font-semibold mb-4">Compose Email</h1>
+    
+    <.form for={@form} phx-submit="send" phx-change="validate">
+
+        <div class="mt-4">
+            <.input
+                field={@form[:type]}
+                type="select"
+                label="Send to"
+                prompt="Select Recipient"
+                options={[{"Contact", :single}, {"Group", :bulk}]}
+                />
+        </div>
+        <div class="mt-4">
+            <.input
+                field={@form[:contact_id]}
+                type="select"
+                label="Contact"
+                prompt="Select Contact"
+                options={Enum.map(@my_contacts, fn contact ->{contact.name, contact.id} end)}
+                />
+        </div>
+
+        <div class="mt-4">
+            <.input
+            field={@form[:subject]}
+            type="text"
+            label="Subject"
+            />
+        </div>
+
+        <div class="mt-4">
+            <.input
+            field={@form[:body]}
+            type="textarea"
+            label="Email body"
+            />
+        </div>
+
+      <div class="flex justify-end mt-4">
+            <.button phx-disable-with="Sending...">Send</.button>
+      </div>
+    </.form>
+  </div>
+</div>

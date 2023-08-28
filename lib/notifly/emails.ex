@@ -19,6 +19,8 @@ defmodule Notifly.Emails do
     Email
     |> where([e], e.sender_id == ^user.id)
     |> Repo.all
+    |> Repo.preload(:sender)
+    |> Repo.preload(:contact)
   end
 
   @doc """
@@ -115,9 +117,16 @@ defmodule Notifly.Emails do
   Sends a single email
 
   """
-  @spec send_single_email(%Contact{}, %User{}, String, String):: :ok
-  def send_single_email(contact, sender, subject, body) do
+  @spec send_single_email(%{}):: :ok
+  def send_single_email(email_params) do
+    contact_id = email_params["contact_id"]
+    sender_id = email_params["sender_id"]
+    subject = email_params["subject"]
+    body = email_params["body"]
+
     type = :single
+    contact = Repo.get(Contact, contact_id)
+    sender = Repo.get(User, sender_id)
 
     {:ok, email_entry} = create_email(%{body: body,subject: subject,type: type,sender_id: sender.id,contact_id: contact.id})
 

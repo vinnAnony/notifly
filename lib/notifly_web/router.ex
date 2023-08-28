@@ -94,6 +94,7 @@ defmodule NotiflyWeb.Router do
       # Mailbox
       live "/mailbox", MailLive.Index
       live "/mailbox/:id", MailLive.Show
+      live "/mail/new", MailLive.Compose
     end
   end
 
