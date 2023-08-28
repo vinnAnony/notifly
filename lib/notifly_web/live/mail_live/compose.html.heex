@@ -8,20 +8,36 @@
             <.input
                 field={@form[:type]}
                 type="select"
+                phx-change="change_recipient"
                 label="Send to"
                 prompt="Select Recipient"
                 options={[{"Contact", :single}, {"Group", :bulk}]}
                 />
         </div>
-        <div class="mt-4">
-            <.input
-                field={@form[:contact_id]}
-                type="select"
-                label="Contact"
-                prompt="Select Contact"
-                options={Enum.map(@my_contacts, fn contact ->{contact.name, contact.id} end)}
-                />
-        </div>
+        
+        <%= if @show_contacts do %>
+          <div class="mt-4">
+              <.input
+                  field={@form[:contact_id]}
+                  type="select"
+                  label="Contact"
+                  prompt="Select Contact"
+                  options={Enum.map(@my_contacts, fn contact ->{contact.name, contact.id} end)}
+                  />
+          </div>
+        <% end %>
+
+        <%= if @show_groups do %>
+          <div class="mt-4">
+              <.input
+                  field={@form[:contact_id]}
+                  type="select"
+                  label="Group"
+                  prompt="Select Group"
+                  options={Enum.map(@my_groups, fn group ->{group.name, group.id} end)}
+                  />
+          </div>
+        <% end %>
 
         <div class="mt-4">
             <.input

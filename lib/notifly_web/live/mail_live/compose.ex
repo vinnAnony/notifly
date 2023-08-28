@@ -1,4 +1,5 @@
 defmodule NotiflyWeb.MailLive.Compose do
+  require Logger
   alias Notifly.Groups
   alias Notifly.Contacts
   alias Notifly.Emails.Email
@@ -10,8 +11,19 @@ defmodule NotiflyWeb.MailLive.Compose do
     {:ok, socket
     |>assign(my_contacts: Contacts.list_contacts(socket.assigns.current_user))
     |>assign(my_groups: Groups.list_groups(socket.assigns.current_user))
+    |>assign(:show_contacts, false)
+    |>assign(:show_groups, false)
     |>assign(:email, %Email{})
     |>assign(form: to_form(Emails.change_email(%Email{})))}
+  end
+
+  def handle_event("change_recipient", %{"email" => value}, socket) do
+    case value["type"] do
+      "single" -> {:noreply, socket |> assign(:show_groups, false) |> assign(:show_contacts, true)}
+      "bulk" -> {:noreply, socket |> assign(:show_groups, true) |> assign(:show_contacts, false)}
+      _ -> {:noreply, socket |> assign(:show_groups, false) |> assign(:show_contacts, false)}
+
+    end
   end
 
   @impl true
@@ -39,6 +51,9 @@ defmodule NotiflyWeb.MailLive.Compose do
          |>assign(form: to_form(Emails.change_email(%Email{})))
          |> put_flash(:info, "Email sent successfully")
          |> redirect(to: ~p"/mailbox")}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :form, to_form(changeset))}
     end
   end
 
