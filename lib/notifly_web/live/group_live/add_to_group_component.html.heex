@@ -1,0 +1,21 @@
+<div>
+    <.simple_form
+    for={@form}
+    id="group-form"
+    phx-target={@myself}
+    phx-submit="save"
+    >
+    
+    <.input
+        field={@form[:contact_id]}
+        type="select"
+        label="Contact"
+        prompt="Select Contact"
+        options={Enum.map(@user_contacts, fn contact ->{contact.name, contact.id} end)}
+    />
+
+    <:actions>
+        <.button phx-disable-with="Saving...">Add to Group</.button>
+    </:actions>
+    </.simple_form>
+</div>

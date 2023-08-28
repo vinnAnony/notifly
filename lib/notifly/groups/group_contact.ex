@@ -36,4 +36,11 @@ defmodule Notifly.Groups.GroupContact do
   def delete_group_contact(%GroupContact{} = group_contact) do
     Repo.delete(group_contact)
   end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking changes.
+  """
+  def change_group_contact(%GroupContact{} = group_contact, attrs \\ %{}) do
+    GroupContact.changeset(group_contact, attrs)
+  end
 end

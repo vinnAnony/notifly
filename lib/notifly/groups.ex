@@ -26,18 +26,17 @@ defmodule Notifly.Groups do
   @doc """
   Gets a single group.
 
-  Raises `Ecto.NoResultsError` if the Group does not exist.
-
-  ## Examples
-
-      iex> get_group!(123)
-      %Group{}
-
-      iex> get_group!(456)
-      ** (Ecto.NoResultsError)
-
   """
   def get_group!(id), do: Repo.get!(Group, id)
+
+  @doc """
+  Gets a single group with contacts.
+
+  """
+  def get_group_with_contacts(id) do
+    Repo.get!(Group, id)
+    |> Repo.preload(:contacts)
+  end
 
   @doc """
   Creates a group.
