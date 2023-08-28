@@ -9,6 +9,11 @@ defmodule NotiflyWeb.MailLive.Index do
   end
 
   @impl true
+  def handle_params(_params, _url, socket) do
+    {:noreply, socket|> assign(:page_title, "Inbox")}
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     email = Emails.get_email!(id)
     {:ok, _} = Emails.delete_email(email)
