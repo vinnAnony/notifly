@@ -23,5 +23,6 @@ defmodule Notifly.Emails.Email do
     email
     |> cast(attrs, [:subject, :body, :type, :status, :contact_id, :ge_id, :sender_id])
     |> validate_required([:subject, :body, :type, :contact_id, :sender_id])
+    |> foreign_key_constraint(:contact_id)
   end
 end

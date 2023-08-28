@@ -369,6 +369,7 @@ defmodule Notifly.Accounts do
       user = Repo.get(User, user.id)
         |> Repo.preload(:contacts)
         |> Repo.preload(:groups)
+        |> Repo.preload(:emails)
 
       if user do
         # Delete user's contacts, groups etc.
@@ -386,6 +387,10 @@ defmodule Notifly.Accounts do
     # Delete user roles
     from(ur in UserRoles, where: ur.user_id == ^user.id) |> Repo.delete_all()
 
+    # Delete user emails
+    Enum.each(user.emails, fn email ->
+      Repo.delete(email)
+
     # Delete user contacts
     Enum.each(user.contacts, fn contact ->
       Repo.delete(contact)
@@ -395,8 +400,7 @@ defmodule Notifly.Accounts do
     Enum.each(user.groups, fn group ->
       Repo.delete(group)
     end)
-
-    # TODO: Delete user emails
+    end)
 
   end
 
