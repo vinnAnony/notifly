@@ -43,4 +43,14 @@ def init(config), do: config
       _ -> ~p"/mailbox"
     end
   end
+
+  @doc """
+  Checks if a user has specified role - for template rendering
+  """
+  def has_role_ui?(current_user, roles) do
+    user = Repo.get(User, current_user.id) |> Repo.preload(:roles)
+    curr_user_roles = Enum.map(user.roles, fn role -> role.slug end)
+
+    Enum.any?(curr_user_roles, fn role -> role in roles end)
+  end
 end
