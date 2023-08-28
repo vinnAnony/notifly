@@ -37,7 +37,8 @@ defmodule NotiflyWeb.MailLive.Compose do
         {:noreply,
          socket
          |>assign(form: to_form(Emails.change_email(%Email{})))
-         |> put_flash(:info, "Email sent successfully")}
+         |> put_flash(:info, "Email sent successfully")
+         |> redirect(to: ~p"/mailbox")}
     end
   end
 

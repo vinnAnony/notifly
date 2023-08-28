@@ -13,10 +13,13 @@ defmodule NotiflyWeb.MailLive.Index do
     email = Emails.get_email!(id)
     {:ok, _} = Emails.delete_email(email)
 
-    {:noreply, stream_delete(socket, :emails, email)}
+    {:noreply,
+      socket
+      |> put_flash(:info, "Email deleted successfully.")
+      |> redirect(to: ~p"/mailbox")}
   end
 
-  # defp render_stream(stream) do
-  #   stream.inserts |> Enum.map(fn {_id, _order, role, _} -> role end)
-  # end
+  defp render_stream(stream) do
+    stream.inserts |> Enum.map(fn {_id, _order, role, _} -> role end)
+  end
 end

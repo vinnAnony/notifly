@@ -7,23 +7,34 @@
           Compose
         </button>
       </a>
-      <.table
-        id="emails"
-        rows={@streams.emails}
-        row_click={fn {_id, email} -> JS.navigate(~p"/mails/#{email}") end}
-      >
-        <:col :let={{_id, email}} label=""><%= email.subject %></:col>
-        <:col :let={{_id, email}} label=""><%= email.contact.email %></:col>
-        <:col :let={{_id, email}} label=""><%= email.status %></:col>
-        <:action :let={{id, email}}>
-          <.link
-            phx-click={JS.push("delete", value: %{id: email.id}) |> hide("##{id}")}
-            data-confirm="Are you sure you want to delete this email?"
-          >
-            Delete
-          </.link>
-        </:action>
-      </.table>
+
+      <ul class="mt-6" id="email-list">
+        <%= for email <- render_stream(@streams.emails) do %>
+          <li class="border-b px-3 transition hover:bg-indigo-100">
+            <a href={~p"/mails/#{email}"} class="flex flex-col">
+            <div class="flex flex-row gap-3">
+              <h3 class="text-lg font-semibold"><%= email.contact.name %></h3>
+              <div class="text-md italic text-gray-400"><%= "<#{email.contact.email}>" %></div>
+            </div>
+            <div class="flex flex-row justify-end gap-3">
+              <p class="text-md text-gray-400"><%= email.inserted_at %></p>
+              <p class="text-md text-gray-400"><%= email.status %></p>
+            </div>
+            <div class="flex flex-col justify-center md:flex-row md:justify-between">
+              <div class="text-md italic text-gray-400"><%= email.subject %></div>
+              <.link
+              phx-click={JS.push("delete", value: %{id: email.id})}
+              data-confirm="Are you sure you want to delete this email?">
+              <button class="w-auto text-white bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5 mt-3 mb-2 md:mb-0 md:mr-2 dark:bg-red-600 dark:hover:bg-red-700">
+                <.icon name="hero-trash"  class="flex-shrink-0 w-5 h-5 text-white transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white" />        
+                Delete
+              </button>
+            </.link>
+            </div>
+            </a>
+          </li>
+        <% end %>
+      </ul>
     </section>
   </div>
 </div>
