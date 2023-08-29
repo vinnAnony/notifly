@@ -75,4 +75,8 @@ defmodule NotiflyWeb.UserLive.Index do
     updated_user = Repo.get(User, socket.assigns.user.id) |> Repo.preload(:roles)
     {:noreply, stream_delete(socket, :user, updated_user)}
   end
+
+  defp render_stream(stream) do
+    stream.inserts |> Enum.map(fn {_id, _order, user, _} -> user end)
+  end
 end

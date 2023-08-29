@@ -1,50 +1,85 @@
-<div class="px-4 py-8 sm:px-6 lg:px-8">
-    <div class="mx-8">
+<div class="px-4">
+    <div class="md:mx-8">
       <.header>
         Users
       </.header>
 
-      <.table
-        id="users"
-        rows={@streams.users}
-        row_click={fn {_id, user} -> JS.navigate(~p"/users/#{user}") end}
-      >
-        <:col :let={{_id, user}} label="Name"><%= "#{user.first_name} #{user.last_name}" %></:col>
-        <:col :let={{_id, user}} label="Email"><%= user.email %></:col>
-        <:col :let={{_id, user}} label="Plan"><%= user.plan %></:col>
-        <:col :let={{_id, user}} label="Role"><%= for role <- user.roles, do: "#{role.name}|" %></:col>
-        <:action :let={{_id, user}}>
-          <.link navigate={~p"/users/#{user}"}>View</.link>
-        </:action>
-        <:action :let={{_id, user}}>
-          <.link navigate={~p"/users/#{user}/roles"}>Edit Role</.link>
-        </:action>
-        <:action :let={{id, user}}>
-        <%= if user.plan == :basic do %>
-        <.link
-            phx-click={JS.push("upgrade", value: %{id: user.id}) |> hide("##{id}")}
-            data-confirm="Are you sure you want to upgrade user?"
-          >
-            Upgrade
-          </.link>
-        <% else %>
-        <.link
-            phx-click={JS.push("downgrade", value: %{id: user.id}) |> hide("##{id}")}
-            data-confirm="Are you sure you want to downgrade user?"
-          >
-            Downgrade
-          </.link>
-        <% end %>
-        </:action>
-        <:action :let={{id, user}}>
-          <.link
-            phx-click={JS.push("delete", value: %{id: user.id}) |> hide("##{id}")}
-            data-confirm="Are you sure?"
-          >
-            Delete
-          </.link>
-        </:action>
-      </.table>
+      <div class="overflow-hidden rounded-lg border border-gray-200 shadow-md m-5">
+        <table class="w-full border-collapse bg-white text-left text-sm text-gray-500">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-4 font-medium text-gray-900">Name</th>
+              <th scope="col" class="px-6 py-4 font-medium text-gray-900">Plan</th>
+              <th scope="col" class="px-6 py-4 font-medium text-gray-900">Role</th>
+              <th scope="col" class="px-6 py-4 font-medium text-gray-900"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 border-t border-gray-100">
+          <%= for user <- render_stream(@streams.users) do %>
+            <tr class="hover:bg-gray-50 cursor-pointer" phx-click={JS.patch(~p"/users/#{user}")}>
+              <th class="flex gap-3 px-6 py-4 font-normal text-gray-900">
+                <div class="text-sm">
+                  <div class="font-medium text-gray-700"><%= "#{user.first_name} #{user.last_name}" %></div>
+                  <div class="text-gray-400"><%= user.email %></div>
+                </div>
+              </th>
+              <td class="px-6 py-4">
+                <%= if user.plan == :basic do%>
+                  <span
+                    class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-600">                  
+                    Basic
+                  </span>
+                <% end %>
+                <%= if user.plan == :gold do%>
+                  <span
+                    class="inline-flex items-center gap-1 rounded-full bg-yellow-50 px-2 py-1 text-xs font-semibold text-yellow-600">                  
+                    Gold
+                  </span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4"><%= for role <- user.roles, do: "#{role.name}|" %></td>
+              <td class="px-6 py-4">
+                <div class="flex justify-end gap-2">
+                  <%= if NotiflyWeb.VerifyUserRole.has_role_ui?(@current_user,["superuser"]) do %>                
+                    <span
+                      class="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold text-gray-600">
+                      <.link navigate={~p"/users/#{user}/roles"}>Edit Role</.link>
+                    </span>
+                    <%= if user.plan == :basic do %>
+                      <span
+                        class="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold text-gray-600">
+                        <.link
+                          phx-click={JS.push("upgrade", value: %{id: user.id})}
+                          data-confirm="Are you sure you want to upgrade user?">
+                          Upgrade
+                        </.link>
+                      </span>
+                      <% else %>
+                      <span
+                        class="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold text-gray-600">
+                        <.link
+                          phx-click={JS.push("downgrade", value: %{id: user.id})}
+                          data-confirm="Are you sure you want to downgrade user?">
+                          Downgrade
+                        </.link>
+                      </span>
+                    <% end %>
+                  <% end %>
+                  <span
+                      class="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold text-gray-600">
+                      <.link
+                    phx-click={JS.push("delete", value: %{id: user.id})}
+                    data-confirm="Are you sure you want to delete user?">
+                    Delete
+                  </.link>
+                    </span>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
 
       <.modal :if={@live_action in [:edit_role]} id="user-role-modal" show on_cancel={JS.patch(~p"/users")}>
       <.live_component

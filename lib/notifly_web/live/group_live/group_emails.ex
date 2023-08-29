@@ -27,6 +27,6 @@ defmodule NotiflyWeb.GroupLive.GroupEmails do
   end
 
   defp render_stream(stream) do
-    stream.inserts |> Enum.map(fn {_id, _order, role, _} -> role end)
+    stream.inserts |> Enum.map(fn {_id, _order, group_email, _} -> group_email end)
   end
 end
