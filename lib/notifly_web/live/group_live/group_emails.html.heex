@@ -12,29 +12,31 @@
       </a>
 
       <ul class="mt-6" id="email-list">
-        <%!-- <%= for email <- render_stream(@streams.emails) do %> --%>
-        <li class="border-b px-3 transition hover:bg-indigo-100">
-          <a href="#" class="flex flex-col">
-            <div class="flex flex-row gap-3">
-              <h3 class="text-lg font-semibold">Vinn Njeru</h3>
-              <div class="text-md italic text-gray-400">vinn@mail.com</div>
-            </div>
-            <div class="flex flex-row justify-between">
-                <div class="text-md italic text-gray-400">Howdy Subject!</div>
-                <div class="flex flex-row justify-end gap-3 float-right">
-                    <span class="text-md text-gray-400">22 mins</span>
-                    <span class="text-md text-gray-400">sent</span>
+        <%= for email <- render_stream(@streams.group_emails) do %>
+          <li class="flex items-center border-y hover:bg-gray-200 px-2">
+            <div class="w-full flex items-center justify-between p-1 my-1 cursor-pointer">
+                <div class="flex items-center">
+                    <div class="flex items-center mr-4 ml-1 space-x-1">
+                    </div>
+                    <span class="w-56 pr-2 truncate"><%= email.group.name %></span>
+                    <span class="w-64 truncate"><%= List.first(email.emails).subject %></span>
+                    <span class="mx-1">-</span>
+                    <span class="w-96 text-gray-600 text-sm truncate"><%= List.first(email.emails).body %></span>
                 </div>
-                <.link phx-click={JS.push("retry", value: %{id: 0})}>
-                <.icon
-                    name="hero-arrow-path"
-                    class="flex-shrink-0 w-5 h-5 text-gray-700 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white"
-                />
-                </.link>
+                
+                  <div class="w-48 flex items-center gap-3 justify-end">
+                      <div class="flex items-center space-x-2">
+                        <span class="text-sm text-gray-500">
+                            <%= email.group.inserted_at %>
+                        </span>
+                        <span class="text-sm text-gray-500">
+                            <%= email.status %>
+                        </span>
+                      </div>
+                  </div>
             </div>
-          </a>
         </li>
-        <%!-- <% end %> --%>
+        <% end %>
       </ul>
     </section>
   </div>

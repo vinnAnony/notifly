@@ -3,8 +3,11 @@ defmodule Notifly.Emails.GroupEmails do
   alias Notifly.Emails.GroupEmails
   alias Notifly.Groups.Group
   alias Notifly.Emails.Email
+
   use Ecto.Schema
+
   import Ecto.Changeset
+  import Ecto.Query, warn: false
 
   schema "group_emails" do
     field :failed_emails, :integer, default: 0
@@ -36,5 +39,19 @@ defmodule Notifly.Emails.GroupEmails do
     group_email
     |> GroupEmails.changeset(attrs)
     |> Repo.update()
+  end
+
+  def list_group_emails(group) do
+    GroupEmails
+      |> where([ge], ge.group_id == ^group.id)
+      |> Repo.all
+      |> Repo.preload(:group)
+      |> Repo.preload(:emails)
+  end
+
+  def get_email_preview(id) do
+    Repo.one! from e in Email, where: e.ge_id == ^id,
+    order_by: e.inserted_at,
+    limit: 1
   end
 end
