@@ -4,17 +4,17 @@
         <%= @selected_user.first_name %> <%= @selected_user.last_name %> Emails
       </.header>
 
-      <%!-- TODO: fetch and display emails belonging to user --%>
-      <%!-- <.table
+      <.table
         id="user-emails"
-        rows={@streams.mails}
-        row_click={fn {_id, mail} -> JS.navigate(~p"/mails/#{mail}") end}
+        rows={@streams.user_mails}
+        row_click={fn {_id, user_mail} -> JS.navigate(~p"/mails/#{user_mail}") end}
       >
-        <:col :let={{_id, mail}} label=""><%= mail.subject %></:col>
-        <:col :let={{_id, mail}} label=""><%= mail.inserted_at %></:col>
-        <:action :let={{_id, mail}}>
-          <.link navigate={~p"/mails/#{mail}"}>View</.link>
+        <:col :let={{_id, user_mail}} label="Subject"><%= user_mail.subject %></:col>
+        <:col :let={{_id, user_mail}} label="Timestamp"><%= user_mail.inserted_at %></:col>
+        <:col :let={{_id, user_mail}} label="Status"><%= user_mail.status %></:col>
+        <:action :let={{_id, user_mail}}>
+          <.link navigate={~p"/mails/#{user_mail}"}>View</.link>
         </:action>
-      </.table> --%>
+      </.table>
   </div>
 </div>

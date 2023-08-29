@@ -1,11 +1,14 @@
 defmodule NotiflyWeb.UserLive.Show do
+  require Logger
+  alias Notifly.Emails
   alias Notifly.Accounts
   use NotiflyWeb, :live_view
 
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, socket}
+  def mount(%{"id" => id}, _session, socket) do
+    user = Accounts.get_user!(id)
+    {:ok, stream(socket, :user_mails, Emails.list_user_emails(user))}
   end
 
   @impl true
