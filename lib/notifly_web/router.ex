@@ -117,6 +117,7 @@ defmodule NotiflyWeb.Router do
       live "/groups/:id/contacts/new", GroupLive.Show, :add_to_group
 
       # TODO: Group emails
+      live "/groups/:id/mails", GroupLive.GroupEmails
     end
   end
 
