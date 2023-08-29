@@ -1,5 +1,6 @@
 defmodule NotiflyWeb.MailLive.Compose do
   require Logger
+  alias Notifly.Emails.GroupEmails
   alias Notifly.Groups
   alias Notifly.Contacts
   alias Notifly.Emails.Email
@@ -61,10 +62,21 @@ defmodule NotiflyWeb.MailLive.Compose do
     group = Groups.get_group_with_contacts(email_params["contact_id"])
     group_contacts = group.contacts
 
+    no_of_emails = length(group_contacts)
+    group_email = GroupEmails.create_group_email(%{no_of_emails: no_of_emails,group_id: group.id})
+
     Enum.map(group_contacts, fn contact ->
       # Update contact_id
       email_params = Map.put(email_params,"contact_id", contact.id)
+      email_params = Map.put(email_params,"ge_id", group_email.id)
       send_email(socket,"single",email_params)
     end)
+
+    GroupEmails.update_group_email(group_email, %{status: :sent})
+    {:noreply,
+         socket
+         |>assign(form: to_form(Emails.change_email(%Email{})))
+         |> put_flash(:info, "Email sent successfully")
+         |> redirect(to: ~p"/mailbox")}
   end
 end
