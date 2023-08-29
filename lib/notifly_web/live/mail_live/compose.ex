@@ -58,6 +58,13 @@ defmodule NotiflyWeb.MailLive.Compose do
   end
 
   defp send_email(socket, "bulk", email_params) do
-    # TODO: Send bulk/group email
+    group = Groups.get_group_with_contacts(email_params["contact_id"])
+    group_contacts = group.contacts
+
+    Enum.map(group_contacts, fn contact ->
+      # Update contact_id
+      email_params = Map.put(email_params,"contact_id", contact.id)
+      send_email(socket,"single",email_params)
+    end)
   end
 end
