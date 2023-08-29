@@ -26,9 +26,15 @@
                       <span class="text-sm text-gray-500">
                           <%= email.inserted_at %>
                       </span>
-                      <span class="text-sm text-gray-500">
-                          <%= email.status %>
-                      </span>
+                      <%=if email.status == :pending do%>
+                      <span class="inline-flex items-center justify-center w-3 h-3 ml-3 text-sm font-medium bg-yellow-300 rounded-full"></span>
+                      <% end %>  
+                      <%=if email.status == :sent do%>
+                      <span class="inline-flex items-center justify-center w-3 h-3 ml-3 text-sm font-medium bg-green-300 rounded-full"></span>
+                      <% end %>  
+                      <%=if email.status == :failed do%>
+                      <span class="inline-flex items-center justify-center w-3 h-3 ml-3 text-sm font-medium bg-red-300 rounded-full"></span>
+                      <% end %>                      
                     </div>
                     <.link
                     phx-click={JS.push("delete", value: %{id: email.id})}
