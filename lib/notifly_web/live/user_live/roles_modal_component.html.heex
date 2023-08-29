@@ -10,7 +10,7 @@
             <.button>Grant Admin Role</.button>
             </.link>
         <% end %>
-        <%= if !has_role?(@streams,["superuser"]) do %>
+        <%= if !has_role?(@streams,["superuser"]) && has_role?(@streams,["admin"]) do %>
             <.link
             phx-click={JS.push("grant_role", value: %{role_slug: "superuser"})}
             data-confirm="Are you sure you want to grant superuser role?"
