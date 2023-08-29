@@ -17,9 +17,10 @@ defmodule Notifly.Application do
       # Start Finch
       {Finch, name: Notifly.Finch},
       # Start the Endpoint (http/https)
-      NotiflyWeb.Endpoint
+      NotiflyWeb.Endpoint,
       # Start a worker by calling: Notifly.Worker.start_link(arg)
       # {Notifly.Worker, arg}
+      {Oban, repo: Notifly.Repo}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

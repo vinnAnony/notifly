@@ -13,4 +13,10 @@ defmodule NotiflyWeb.GroupLive.GroupEmails do
     group = Repo.get(Group, id)
     {:noreply, socket|> assign(:page_title, "#{group.name} Emails")}
   end
+
+  @impl true
+  def handle_event("retry", %{"id" => _id}, socket) do
+
+    {:noreply, socket}
+  end
 end
