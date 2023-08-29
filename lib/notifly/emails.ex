@@ -18,6 +18,7 @@ defmodule Notifly.Emails do
   def list_user_emails(user) do
     Email
     |> where([e], e.sender_id == ^user.id)
+    |> order_by(desc: :id)
     |> Repo.all
     |> Repo.preload(:sender)
     |> Repo.preload(:contact)
