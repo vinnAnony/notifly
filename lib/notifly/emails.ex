@@ -129,7 +129,7 @@ defmodule Notifly.Emails do
     subject = email_params["subject"]
     body = email_params["body"]
 
-    type = :single
+    type = email_params["type"]
     contact = Repo.get(Contact, contact_id)
     sender = Repo.get(User, sender_id)
 
