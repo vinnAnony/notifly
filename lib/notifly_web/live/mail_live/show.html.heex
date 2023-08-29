@@ -17,11 +17,13 @@
         <div>
           <ul class="flex text-gray-400 space-x-4">
             <li class="w-6 h-6 cursor-pointer">
-            <.link
-              phx-click={JS.push("delete", value: %{id: @selected_email.id})}
-              data-confirm="Are you sure you want to delete this email?">
-              <.icon name="hero-trash"  class="flex-shrink-0 w-7 h-7 text-gray-700 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white" />        
-            </.link>
+            <%= if @selected_email.sender.id == @current_user.id do%>
+              <.link
+                phx-click={JS.push("delete", value: %{id: @selected_email.id})}
+                data-confirm="Are you sure you want to delete this email?">
+                <.icon name="hero-trash"  class="flex-shrink-0 w-7 h-7 text-gray-700 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white" />        
+              </.link>
+            <% end %>
             </li>
           </ul>
         </div>
