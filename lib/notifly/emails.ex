@@ -134,7 +134,9 @@ defmodule Notifly.Emails do
     contact = Repo.get(Contact, contact_id)
     sender = Repo.get(User, sender_id)
 
-    {:ok, email_entry} = create_email(%{body: body,subject: subject,type: type,ge_id: ge_id,sender_id: sender.id,contact_id: contact.id})
+    {:ok, email_entry} = create_email(%{body: body,subject: subject,
+    name: contact.name, email: contact.email,type: type,ge_id: ge_id,
+    sender_id: sender.id,contact_id: contact.id})
 
     email_delivery = EmailNotifier.deliver(contact, sender, subject, body)
       with {:ok, _metadata} <- email_delivery do

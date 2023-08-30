@@ -74,15 +74,16 @@ defmodule NotiflyWeb.MailLive.Compose do
       email_params = Map.put(email_params,"contact_id", contact.id)
       email_params = Map.put(email_params,"ge_id", group_email.id)
 
+      sender = Repo.get(User, email_params["sender_id"])
+      contact = Repo.get(Contact, email_params["contact_id"])
+
       # Insert email entry in db
       {:ok, email_entry} = Emails.create_email(%{body: email_params["body"],subject: email_params["subject"],
+        name: contact.name, email: contact.email,
         type: email_params["type"],ge_id: email_params["ge_id"],sender_id: email_params["sender_id"],
         contact_id: email_params["contact_id"]})
 
       #TODO: Add email to job queue
-      sender = Repo.get(User, email_entry.sender_id)
-      contact = Repo.get(Contact, email_entry.contact_id)
-
       %{channel: "email_worker",
         email_id: email_entry.id,
         sender: %{id: sender.id, first_name: sender.first_name, last_name: sender.last_name, email: sender.email},

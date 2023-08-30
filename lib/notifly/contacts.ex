@@ -4,6 +4,7 @@ defmodule Notifly.Contacts do
   """
 
   import Ecto.Query, warn: false
+  alias Notifly.Emails.Email
   alias Notifly.Repo
 
   alias Notifly.Contacts.Contact
@@ -88,7 +89,19 @@ defmodule Notifly.Contacts do
 
   """
   def delete_contact(%Contact{} = contact) do
+    disassociate_emails_before_delete(contact.id)
     Repo.delete(contact)
+  end
+
+  def disassociate_emails_before_delete(contact_id) do
+    emails_to_disassociate =
+      from(e in Email, where: e.contact_id == ^contact_id)
+      |> Repo.all()
+
+    Enum.each(emails_to_disassociate, fn email ->
+      email = Ecto.Changeset.change(email, contact_id: nil)
+      Repo.update(email)
+    end)
   end
 
   @doc """

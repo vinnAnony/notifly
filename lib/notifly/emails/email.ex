@@ -6,9 +6,11 @@ defmodule Notifly.Emails.Email do
   import Ecto.Changeset
 
   schema "emails" do
+    field :name, :string
+    field :email, :string
     field :body, :string
-    field :status, Ecto.Enum, values: [:pending, :sent, :failed], default: :pending
     field :subject, :string
+    field :status, Ecto.Enum, values: [:pending, :sent, :failed], default: :pending
     field :type, Ecto.Enum, values: [:single, :bulk]
 
     belongs_to :sender, User
@@ -21,8 +23,8 @@ defmodule Notifly.Emails.Email do
   @doc false
   def changeset(email, attrs) do
     email
-    |> cast(attrs, [:subject, :body, :type, :status, :contact_id, :ge_id, :sender_id])
-    |> validate_required([:subject, :body, :type, :contact_id, :sender_id])
+    |> cast(attrs, [:subject, :body, :name, :email, :type, :status, :contact_id, :ge_id, :sender_id])
+    |> validate_required([:subject, :body, :name, :email, :type, :contact_id, :sender_id])
     |> foreign_key_constraint(:contact_id)
   end
 end
