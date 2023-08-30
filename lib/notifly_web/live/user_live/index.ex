@@ -65,14 +65,22 @@ defmodule NotiflyWeb.UserLive.Index do
     user = Accounts.get_user!(socket.assigns.user.id)
     Accounts.grant_role_to_user(user, role_slug)
 
-    {:noreply,stream(socket, :users, Accounts.list_users(), reset: true)}
+    stream(socket, :users, Accounts.list_users(), reset: true)
+    {:noreply,
+         socket
+         |> put_flash(:info, "#{role_slug} role granted successfully.")
+         |> redirect(to: ~p"/users/#{user.id}/roles")}
   end
 
   def handle_event("revoke_role", %{"role_slug" => role_slug}, socket) do
     user = Accounts.get_user!(socket.assigns.user.id)
     Accounts.revoke_role_to_user(user, role_slug)
 
-    {:noreply,stream(socket, :users, Accounts.list_users(), reset: true)}
+    stream(socket, :users, Accounts.list_users(), reset: true)
+    {:noreply,
+         socket
+         |> put_flash(:info, "#{role_slug} role revoked successfully.")
+         |> redirect(to: ~p"/users/#{user.id}/roles")}
   end
 
   defp render_stream(stream) do
