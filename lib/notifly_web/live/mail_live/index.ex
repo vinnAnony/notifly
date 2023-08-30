@@ -68,6 +68,6 @@ defmodule NotiflyWeb.MailLive.Index do
   end
 
   defp render_stream(stream) do
-    stream.inserts |> Enum.map(fn {_id, _order, role, _} -> role end)
+    stream.inserts |> Enum.map(fn {_id, _order, email, _} -> email end)
   end
 end
