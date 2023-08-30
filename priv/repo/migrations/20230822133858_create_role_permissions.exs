@@ -3,8 +3,8 @@ defmodule Notifly.Repo.Migrations.CreateRolePermissions do
 
   def change do
     create table(:role_permissions) do
-      add :role_id, references(:roles, on_delete: :nothing)
-      add :permission_id, references(:permissions, on_delete: :nothing)
+      add :role_id, references(:roles, on_delete: :delete_all)
+      add :permission_id, references(:permissions, on_delete: :delete_all)
 
       timestamps()
     end

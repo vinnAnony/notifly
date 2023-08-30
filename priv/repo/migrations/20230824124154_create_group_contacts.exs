@@ -4,7 +4,7 @@ defmodule Notifly.Repo.Migrations.CreateGroupContacts do
   def change do
     create table(:group_contacts) do
       add :group_id, references(:groups, on_delete: :delete_all)
-      add :contact_id, references(:contacts, on_delete: :nothing)
+      add :contact_id, references(:contacts, on_delete: :delete_all)
 
       timestamps()
     end
