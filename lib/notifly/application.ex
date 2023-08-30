@@ -20,6 +20,8 @@ defmodule Notifly.Application do
       NotiflyWeb.Endpoint,
       # Start a worker by calling: Notifly.Worker.start_link(arg)
       # {Notifly.Worker, arg}
+
+      # Start Oban
       {Oban, repo: Notifly.Repo}
     ]
 
