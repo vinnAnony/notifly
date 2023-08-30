@@ -1,5 +1,9 @@
 defmodule NotiflyWeb.MailLive.Compose do
   require Logger
+  alias Notifly.Workers.EmailWorker
+  alias Notifly.Contacts.Contact
+  alias Notifly.Accounts.User
+  alias Notifly.Repo
   alias Notifly.Emails.GroupEmails
   alias Notifly.Groups
   alias Notifly.Contacts
@@ -69,10 +73,33 @@ defmodule NotiflyWeb.MailLive.Compose do
       # Update contact_id
       email_params = Map.put(email_params,"contact_id", contact.id)
       email_params = Map.put(email_params,"ge_id", group_email.id)
-      send_email(socket,"single",email_params)
-    end)
 
-    GroupEmails.update_group_email(group_email, %{status: :sent})
+      # Insert email entry in db
+      {:ok, email_entry} = Emails.create_email(%{body: email_params["body"],subject: email_params["subject"],
+        type: email_params["type"],ge_id: email_params["ge_id"],sender_id: email_params["sender_id"],
+        contact_id: email_params["contact_id"]})
+
+      #TODO: Add email to job queue
+      sender = Repo.get(User, email_entry.sender_id)
+      contact = Repo.get(Contact, email_entry.contact_id)
+
+      %{channel: "email_worker",
+        email_id: email_entry.id,
+        sender: %{id: sender.id, first_name: sender.first_name, last_name: sender.last_name, email: sender.email},
+        recipient: %{id: contact.id, email: contact.email, name: contact.name},
+        subject: email_entry.subject,
+        body: email_entry.body}
+        |> EmailWorker.new()
+        |> Oban.insert()
+    end)
+    # Execute queue
+    Oban.start_queue(queue: :mailers, limit: 1)
+
+    #TODO: Capture failed emails - still reading as pending
+    #TODO: Update group email status
+    # GroupEmails.update_group_email(group_email, %{status: :sent})
+    #TODO: Update group email status END
+
     {:noreply,
          socket
          |>assign(form: to_form(Emails.change_email(%Email{})))

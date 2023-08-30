@@ -55,14 +55,15 @@ defmodule NotiflyWeb.MailLive.Index do
     sender = Repo.get(User, email.sender_id)
     contact = Repo.get(Contact, email.contact_id)
 
-    EmailWorker.perform(%{
+    args = %{
       "channel"=> "email_worker",
       "email_id"=> id,
-      "sender" => sender,
-      "recipient" => contact,
+      "sender" => %{"id" => sender.id, "first_name" => sender.first_name, "last_name" => sender.last_name, "email" => sender.email},
+      "recipient" => %{"id" => contact.id, "email" => contact.email, "name" => contact.name},
       "subject" => email.subject,
       "body" => email.body
-     })
+     }
+    EmailWorker.perform(%Oban.Job{args: args})
 
     {:noreply, socket}
   end

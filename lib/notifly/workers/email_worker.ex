@@ -1,12 +1,13 @@
 defmodule Notifly.Workers.EmailWorker do
+  require Logger
   alias Notifly.Emails.Email
   alias Notifly.Repo
   alias Notifly.Emails
   alias Notifly.Emails.EmailNotifier
-  use Oban.Worker, queue: :mailers, max_attempts: 1, priority: 3, tags: ["bulk_email"]
+  use Oban.Worker, queue: :mailers, max_attempts: 5, priority: 3, tags: ["bulk_email"]
 
   alias NotiflyWeb.{Endpoint}
-  def perform(%{"channel" => channel,"email_id" => email_id, "sender" => sender, "recipient" => recipient,  "subject" => subject, "body" => body}) do
+  def perform(%Oban.Job{args: %{"channel" => channel, "email_id" => email_id, "sender" => sender, "recipient" => recipient, "subject" => subject, "body" => body}}) do
     send_email(channel, email_id, recipient, sender, subject, body)
     await_email(channel,email_id)
   end
@@ -16,7 +17,7 @@ defmodule Notifly.Workers.EmailWorker do
 
     # Send email
     Task.async(fn ->
-      email_delivery = EmailNotifier.deliver(recipient, sender, subject, body)
+      email_delivery = EmailNotifier.worker_email_delivery(recipient, sender, subject, body)
       with {:ok, _email} <- email_delivery do
         send(job_pid, {:sent, email_id})
       else
