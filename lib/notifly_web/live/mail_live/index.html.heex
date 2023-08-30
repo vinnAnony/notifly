@@ -45,7 +45,7 @@
                         </span>
                         <% end %>                      
                     </div>
-                    <%=if NotiflyWeb.VerifyUserPermissions.has_permission?(@current_user,"can_retry_failed_emails") do%>
+                    <%=if @current_user.plan == :gold do%>
                       <%=if email.status == :failed do%>
                         <.link
                         phx-click={JS.push("retry", value: %{id: email.id})}>
