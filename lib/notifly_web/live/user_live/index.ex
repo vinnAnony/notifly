@@ -38,7 +38,7 @@ defmodule NotiflyWeb.UserLive.Index do
          |> redirect(to: ~p"/users")}
     else
       user = Accounts.get_user!(id)
-      {:ok, _} = Accounts.delete_user(user)
+      Accounts.delete_user(user)
 
       {:noreply, stream_delete(socket, :users, user)}
     end
@@ -47,33 +47,32 @@ defmodule NotiflyWeb.UserLive.Index do
   @impl true
   def handle_event("upgrade", %{"id" => id}, socket) do
     user = Accounts.get_user!(id)
+    Accounts.User.upgrade_user_plan(user)
 
-    {:ok, _} = Accounts.User.upgrade_user_plan(user)
-    {:noreply, socket}
+    {:noreply,stream(socket, :users, Accounts.list_users(), reset: true)}
   end
 
   @impl true
   def handle_event("downgrade", %{"id" => id}, socket) do
     user = Accounts.get_user!(id)
+    Accounts.User.downgrade_user_plan(user)
 
-    {:ok, _} = Accounts.User.downgrade_user_plan(user)
-    {:noreply, socket}
+    {:noreply,stream(socket, :users, Accounts.list_users(), reset: true)}
   end
 
   @impl true
   def handle_event("grant_role", %{"role_slug" => role_slug}, socket) do
     user = Accounts.get_user!(socket.assigns.user.id)
+    Accounts.grant_role_to_user(user, role_slug)
 
-    {:ok, _} = Accounts.grant_role_to_user(user, role_slug)
-    {:noreply, socket}
+    {:noreply,stream(socket, :users, Accounts.list_users(), reset: true)}
   end
 
   def handle_event("revoke_role", %{"role_slug" => role_slug}, socket) do
     user = Accounts.get_user!(socket.assigns.user.id)
+    Accounts.revoke_role_to_user(user, role_slug)
 
-    {:ok, _} = Accounts.revoke_role_to_user(user, role_slug)
-    updated_user = Repo.get(User, socket.assigns.user.id) |> Repo.preload(:roles)
-    {:noreply, stream_delete(socket, :user, updated_user)}
+    {:noreply,stream(socket, :users, Accounts.list_users(), reset: true)}
   end
 
   defp render_stream(stream) do

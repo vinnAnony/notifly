@@ -391,15 +391,15 @@ defmodule Notifly.Accounts do
     Enum.each(user.emails, fn email ->
       Repo.delete(email)
 
-    # Delete user contacts
-    Enum.each(user.contacts, fn contact ->
-      Repo.delete(contact)
-    end)
+      # Delete user contacts
+      Enum.each(user.contacts, fn contact ->
+        Repo.delete(contact)
+      end)
 
-    # Delete user groups
-    Enum.each(user.groups, fn group ->
-      Repo.delete(group)
-    end)
+      # Delete user groups
+      Enum.each(user.groups, fn group ->
+        Repo.delete(group)
+      end)
     end)
 
   end
