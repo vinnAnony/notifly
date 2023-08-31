@@ -18,7 +18,6 @@ defmodule Notifly.Emails.EmailNotifier do
   end
 
   def worker_email_delivery(recipient, sender, subject, body) do
-    Logger.info(recipient)
     email =
       new()
       |> to({recipient["name"], recipient["email"]})

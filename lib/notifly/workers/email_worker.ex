@@ -1,12 +1,22 @@
 defmodule Notifly.Workers.EmailWorker do
   require Logger
+  alias Notifly.Emails.GroupEmails
   alias Notifly.Emails.Email
   alias Notifly.Repo
   alias Notifly.Emails
   alias Notifly.Emails.EmailNotifier
+  alias NotiflyWeb.{Endpoint}
+
   use Oban.Worker, queue: :mailers, max_attempts: 5, priority: 3, tags: ["bulk_email"]
 
-  alias NotiflyWeb.{Endpoint}
+  defstruct []
+
+  defimpl Notifly.Reportable do
+    @threshold 1
+
+    def reportable?(_worker, attempt), do: attempt > @threshold
+  end
+
   def perform(%Oban.Job{args: %{"channel" => channel, "email_id" => email_id, "sender" => sender, "recipient" => recipient, "subject" => subject, "body" => body}}) do
     send_email(channel, email_id, recipient, sender, subject, body)
     await_email(channel,email_id)
@@ -33,7 +43,17 @@ defmodule Notifly.Workers.EmailWorker do
         await_email(channel,email_id)
 
       {:sent, _message} ->
-        Emails.update_email(Repo.get(Email, email_id), %{status: :sent})
+        # Update email status
+        email = Repo.get(Email, email_id)
+        Emails.update_email(email, %{status: :sent})
+        # update sent group emails count
+        if email.ge_id do
+          group_email = Repo.get(GroupEmails, email.ge_id)
+          new_success_count = group_email.success_emails + 1
+          new_pending_count = group_email.pending_emails - 1
+          GroupEmails.update_group_email(group_email, %{success_emails: new_success_count, pending_emails: new_pending_count})
+        end
+
         Endpoint.broadcast(channel, "email:sent", %{email_id: email_id, status: :sent, progress: 100})
 
       {:failed, _message} ->
