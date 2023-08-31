@@ -40,7 +40,7 @@ defmodule NotiflyWeb.UserLive.Index do
       user = Accounts.get_user!(id)
       Accounts.delete_user(user)
 
-      {:noreply, stream_delete(socket, :users, user)}
+      {:noreply, stream(socket, :users, Accounts.list_users())}
     end
   end
 

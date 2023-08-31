@@ -4,6 +4,7 @@ defmodule Notifly.Accounts do
   """
 
   import Ecto.Query, warn: false
+  alias Notifly.Contacts
   alias Notifly.Accounts.Role
   alias Notifly.Accounts.UserRoles
   alias Notifly.Repo
@@ -387,19 +388,20 @@ defmodule Notifly.Accounts do
     # Delete user roles
     from(ur in UserRoles, where: ur.user_id == ^user.id) |> Repo.delete_all()
 
+    # Delete user contacts
+    Enum.each(user.contacts, fn contact ->
+      Contacts.delete_contact(contact)
+    end)
+
+    # Delete user groups
+    Enum.each(user.groups, fn group ->
+      Repo.delete(group)
+    end)
+
     # Delete user emails
-    Enum.each(user.emails, fn email ->
+    updated_user = Repo.get(User, user.id) |> Repo.preload(:emails)
+    Enum.each(updated_user.emails, fn email ->
       Repo.delete(email)
-
-      # Delete user contacts
-      Enum.each(user.contacts, fn contact ->
-        Repo.delete(contact)
-      end)
-
-      # Delete user groups
-      Enum.each(user.groups, fn group ->
-        Repo.delete(group)
-      end)
     end)
 
   end
