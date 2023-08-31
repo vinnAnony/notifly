@@ -29,9 +29,12 @@ defmodule NotiflyWeb.MailLive.Index do
         "email:sent" ->
           # update email status - update stream
           {:noreply,stream(socket, :emails, Emails.list_user_emails(socket.assigns.current_user), reset: true)}
+
         "email:failed" ->
           # update email status
           {:noreply,stream(socket, :emails, Emails.list_user_emails(socket.assigns.current_user), reset: true)}
+
+        _ -> {:noreply, socket}
       end
     else
       {:noreply, socket}

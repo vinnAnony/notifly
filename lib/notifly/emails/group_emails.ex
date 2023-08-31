@@ -41,6 +41,11 @@ defmodule Notifly.Emails.GroupEmails do
     |> Repo.update()
   end
 
+  def get_group_email(id) do
+    Repo.get!(GroupEmails, id)
+      |> Repo.preload(:group)
+  end
+
   def list_group_emails(group) do
     GroupEmails
       |> where([ge], ge.group_id == ^group.id)

@@ -50,6 +50,7 @@ defmodule Notifly.Workers.EmailWorker do
             if new_success_count == group_email.no_of_emails do
               new_failed_count = 0
               GroupEmails.update_group_email(group_email, %{success_emails: new_success_count, failed_emails: new_failed_count, status: :sent})
+              Endpoint.broadcast(channel, "group_email:sent", %{group_email_id: group_email.id, status: :sent})
             else
               GroupEmails.update_group_email(group_email, %{success_emails: new_success_count, failed_emails: new_failed_count})
             end
@@ -57,11 +58,11 @@ defmodule Notifly.Workers.EmailWorker do
             if new_success_count == group_email.no_of_emails do
               new_pending_count = 0
               GroupEmails.update_group_email(group_email, %{success_emails: new_success_count, pending_emails: new_pending_count, status: :sent})
+              Endpoint.broadcast(channel, "group_email:sent", %{group_email_id: group_email.id, status: :sent})
             else
               GroupEmails.update_group_email(group_email, %{success_emails: new_success_count, pending_emails: new_pending_count})
             end
           end
-
         end
 
         Endpoint.broadcast(channel, "email:sent", %{email_id: email_id, status: :sent, progress: 100})
@@ -74,7 +75,6 @@ defmodule Notifly.Workers.EmailWorker do
   end
 
   defp is_retry_failed_email?(email) do
-    IO.inspect(email)
     if email.status == :failed do
       true
     else
