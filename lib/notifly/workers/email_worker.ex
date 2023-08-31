@@ -1,5 +1,4 @@
 defmodule Notifly.Workers.EmailWorker do
-  require Logger
   alias Notifly.Emails.GroupEmails
   alias Notifly.Emails.Email
   alias Notifly.Repo
@@ -7,15 +6,7 @@ defmodule Notifly.Workers.EmailWorker do
   alias Notifly.Emails.EmailNotifier
   alias NotiflyWeb.{Endpoint}
 
-  use Oban.Worker, queue: :mailers, max_attempts: 5, priority: 3, tags: ["bulk_email"]
-
-  defstruct []
-
-  defimpl Notifly.Reportable do
-    @threshold 1
-
-    def reportable?(_worker, attempt), do: attempt > @threshold
-  end
+  use Oban.Worker, queue: :mailers, max_attempts: 1, priority: 3, tags: ["bulk_email"]
 
   def perform(%Oban.Job{args: %{"channel" => channel, "email_id" => email_id, "sender" => sender, "recipient" => recipient, "subject" => subject, "body" => body}}) do
     send_email(channel, email_id, recipient, sender, subject, body)
@@ -63,8 +54,6 @@ defmodule Notifly.Workers.EmailWorker do
 
         Endpoint.broadcast(channel, "email:sent", %{email_id: email_id, status: :sent, progress: 100})
 
-      {:failed, _message} ->
-        Endpoint.broadcast(channel, "email:failed", %{email_id: email_id, status: :failed ,progress: 0})
     after
       10_000 ->
         Endpoint.broadcast(channel, "email:failed", %{email_id: email_id, status: :failed ,progress: 0})

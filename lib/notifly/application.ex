@@ -25,6 +25,8 @@ defmodule Notifly.Application do
       {Oban, repo: Notifly.Repo}
     ]
 
+    :ok = :telemetry.attach("oban-errors", [:oban, :job, :exception], &Notifly.Reporters.EmailErrorReporter.handle_event/4, [])
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Notifly.Supervisor]
