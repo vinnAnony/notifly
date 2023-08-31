@@ -51,7 +51,14 @@ defmodule Notifly.Workers.EmailWorker do
           group_email = Repo.get(GroupEmails, email.ge_id)
           new_success_count = group_email.success_emails + 1
           new_pending_count = group_email.pending_emails - 1
-          GroupEmails.update_group_email(group_email, %{success_emails: new_success_count, pending_emails: new_pending_count})
+
+          # Compare no. of email statuses to determine group email status
+          if new_success_count == group_email.no_of_emails do
+            new_pending_count = 0
+            GroupEmails.update_group_email(group_email, %{success_emails: new_success_count, pending_emails: new_pending_count, status: :sent})
+          else
+            GroupEmails.update_group_email(group_email, %{success_emails: new_success_count, pending_emails: new_pending_count})
+          end
         end
 
         Endpoint.broadcast(channel, "email:sent", %{email_id: email_id, status: :sent, progress: 100})
