@@ -41,9 +41,20 @@ defmodule Notifly.Emails.GroupEmails do
     |> Repo.update()
   end
 
+  @doc """
+  Get group email - additionally the group
+  """
   def get_group_email(id) do
     Repo.get!(GroupEmails, id)
       |> Repo.preload(:group)
+  end
+
+  @doc """
+  Get group email - additionally the emails
+  """
+  def get_group_email_pre_emails(id) do
+    Repo.get!(GroupEmails, id)
+      |> Repo.preload(:emails)
   end
 
   def list_group_emails(group) do

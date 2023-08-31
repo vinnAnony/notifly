@@ -12,52 +12,62 @@
       </.link>
 
       <ul class="mt-6" id="email-list">
-        <%= for email <- render_stream(@streams.group_emails) do %>
+        <%= for group_email <- render_stream(@streams.group_emails) do %>
           <li class="flex items-center border-y hover:bg-gray-200 px-2">
             <div class="w-full flex items-center justify-between p-1 my-1 cursor-pointer">
                 <div class="flex items-center">
                     <div class="flex items-center mr-4 ml-1 space-x-1">
                     </div>
-                    <span class="w-56 pr-2 truncate"><%= email.group.name %></span>
-                    <span class="w-64 truncate"><%= List.first(email.emails).subject %></span>
+                    <span class="w-56 pr-2 truncate"><%= group_email.group.name %></span>
+                    <span class="w-64 truncate"><%= List.first(group_email.emails).subject %></span>
                     <span class="mx-1">-</span>
-                    <span class="w-96 text-gray-600 text-sm truncate"><%= List.first(email.emails).body %></span>
+                    <span class="w-96 text-gray-600 text-sm truncate"><%= List.first(group_email.emails).body %></span>
                     <div>
                       <span class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold text-green-600">
-                        <%= email.success_emails %>
+                        <%= group_email.success_emails %>
                       </span>
 
                       <span class="inline-flex items-center gap-1 rounded-full bg-yellow-50 px-2 py-1 text-xs font-semibold text-yellow-600">
-                        <%= email.pending_emails %>
+                        <%= group_email.pending_emails %>
                       </span>
 
                       <span class="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-1 text-xs font-semibold text-red-600">
-                        <%= email.failed_emails %>
+                        <%= group_email.failed_emails %>
                       </span>
                     </div>
                 </div>
                 
                   <div class="w-48 flex items-center gap-3 justify-end">
                       <div class="flex items-center space-x-2">                        
-                        <%=if email.status == :pending do%>
+                        <%=if group_email.status == :pending do%>
                         <span class="inline-flex items-center gap-1 rounded-full bg-yellow-50 px-2 py-1 text-xs font-semibold text-yellow-600">
                           <span class="h-1.5 w-1.5 rounded-full bg-yellow-600"></span>
                             Pending
                         </span>
                         <% end %>  
-                        <%=if email.status == :sent do%>
+                        <%=if group_email.status == :sent do%>
                         <span class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold text-green-600">
                           <span class="h-1.5 w-1.5 rounded-full bg-green-600"></span>
-                            Sent
+                            Sent 
                         </span>
                         <% end %>  
-                        <%=if email.status == :failed do%>
+                        <%=if group_email.status == :failed do%>
                         <span class="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-1 text-xs font-semibold text-red-600">
                           <span class="h-1.5 w-1.5 rounded-full bg-red-600"></span>
                             Failed
                         </span>
                         <% end %> 
                       </div>
+                      <%=if @current_user.plan == :gold do%>
+                        <%=if group_email.status == :failed do%>
+                          <.link
+                          phx-click={JS.push("retry", value: %{id: group_email.id})}>
+                            <button title="Retry">
+                                <.icon name="hero-arrow-path"  class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                            </button>
+                          </.link>
+                        <% end %> 
+                      <% end %> 
                   </div>
             </div>
         </li>
