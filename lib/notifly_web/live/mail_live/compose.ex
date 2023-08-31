@@ -103,8 +103,6 @@ defmodule NotiflyWeb.MailLive.Compose do
     # Execute queue
     Oban.start_queue(queue: :mailers, limit: 1)
 
-    #TODO: Capture failed emails - still reading as pending
-
     {:noreply,
          socket
          |>assign(form: to_form(Emails.change_email(%Email{})))
