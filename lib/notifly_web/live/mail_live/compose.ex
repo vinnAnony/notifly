@@ -104,9 +104,6 @@ defmodule NotiflyWeb.MailLive.Compose do
     Oban.start_queue(queue: :mailers, limit: 1)
 
     #TODO: Capture failed emails - still reading as pending
-    #TODO: Update group email status
-    # GroupEmails.update_group_email(group_email, %{status: :sent})
-    #TODO: Update group email status END
 
     {:noreply,
          socket
