@@ -44,6 +44,7 @@ defmodule Notifly.Emails.GroupEmails do
   def list_group_emails(group) do
     GroupEmails
       |> where([ge], ge.group_id == ^group.id)
+      |> order_by(desc: :id)
       |> Repo.all
       |> Repo.preload(:group)
       |> Repo.preload(:emails)
