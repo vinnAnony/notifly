@@ -76,7 +76,7 @@ defmodule NotiflyWeb.UserLive.Index do
     {:noreply,
          socket
          |> put_flash(:info, "#{role_slug} role granted successfully.")
-         |> redirect(to: ~p"/users/#{user.id}/roles")}
+         |> redirect(to: ~p"/users")}
   end
 
   def handle_event("revoke_role", %{"role_slug" => role_slug}, socket) do
@@ -87,7 +87,7 @@ defmodule NotiflyWeb.UserLive.Index do
     {:noreply,
          socket
          |> put_flash(:info, "#{role_slug} role revoked successfully.")
-         |> redirect(to: ~p"/users/#{user.id}/roles")}
+         |> redirect(to: ~p"/users")}
   end
 
   defp render_stream(stream) do
