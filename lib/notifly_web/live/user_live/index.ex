@@ -31,16 +31,23 @@ defmodule NotiflyWeb.UserLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
+    user = Accounts.get_user!(id)
+
     if id == socket.assigns.current_user.id do
       {:noreply,
          socket
          |> put_flash(:error, "Cannot delete your own account.")
          |> redirect(to: ~p"/users")}
     else
-      user = Accounts.get_user!(id)
-      Accounts.delete_user(user)
-
-      {:noreply, stream(socket, :users, Accounts.list_users())}
+      if NotiflyWeb.VerifyUserRole.has_role_ui?(user, ["superuser"]) do
+        {:noreply,
+           socket
+           |> put_flash(:error, "Cannot delete superuser account. Revoke superuser role first.")
+           |> redirect(to: ~p"/users")}
+      else
+        Accounts.delete_user(user)
+        {:noreply, stream(socket, :users, Accounts.list_users())}
+      end
     end
   end
 
