@@ -3,32 +3,21 @@
     <h1 class="text-xl font-semibold mb-4">Compose Email</h1>
     
     <.form for={@form} phx-submit="send" phx-change="validate">
-      <div class="mt-4">
-        
-        <fieldset>
-          <div class="flex items-center">
-            <.input
-            field={@form[:type]}
-            value={:single}
-            type="radio"
-            label="Contact"
-            checked={true}
-            phx-change="change_recipient"
-            />
-          </div>
-          <%= if NotiflyWeb.VerifyUserPermissions.has_permission?(@current_user,"can_send_email_to_group") do %>
-          <div class="flex items-center">
-            <.input
-            field={@form[:type]}
-            value={:bulk}
-            type="radio"
-            label="Group"
-            phx-change="change_recipient"
-            />
-          </div>
-          <% end %>
-        </fieldset>
-
+      <div class="mt-4">        
+        <.input
+          field={@form[:type]}
+          type="select"
+          phx-change="change_recipient"
+          label="Send to"
+          prompt="Select Recipient"
+          options={
+            if NotiflyWeb.VerifyUserPermissions.has_permission?(@current_user,"can_send_email_to_group") do
+              [{"Contact", :single}, {"Group", :bulk}]
+            else
+              [{"Contact", :single}]
+            end            
+            }
+          />
       </div>        
         <%= if @show_contacts do %>
           <div class="mt-4">
