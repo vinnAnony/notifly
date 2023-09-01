@@ -119,6 +119,14 @@ defmodule Notifly.Accounts.User do
   end
 
   @doc """
+  A user changeset for changing user details - email, phone, name.
+  """
+  def user_details_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:first_name,:last_name,:email,:msisdn])
+  end
+
+  @doc """
   A user changeset for changing the password.
 
   ## Options

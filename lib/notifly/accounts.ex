@@ -160,6 +160,24 @@ defmodule Notifly.Accounts do
     |> Ecto.Multi.delete_all(:tokens, UserToken.user_and_contexts_query(user, [context]))
   end
 
+  @doc """
+  Returns an `%Ecto.Changeset{}` for changing the user details.
+  """
+  def change_user_details(user, attrs \\ %{}) do
+    User.user_details_changeset(user, attrs)
+  end
+
+  @doc """
+  Updates a user's details.
+
+  """
+  def update_user_details(%User{} = user, password, attrs) do
+    user
+    |> User.user_details_changeset(attrs)
+    |> User.validate_current_password(password)
+    |> Repo.update()
+  end
+
   @doc ~S"""
   Delivers the update email instructions to the given user.
 
