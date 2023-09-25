@@ -19,6 +19,7 @@ defmodule Notifly.Contacts.Contact do
     contact
     |> cast(attrs, [:name, :email,:owner_id])
     |> validate_required([:name, :email,:owner_id])
+    |> unique_constraint(:email)
     |> assoc_constraint(:owner)
   end
 end
